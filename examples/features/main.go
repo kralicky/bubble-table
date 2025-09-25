@@ -19,33 +19,31 @@ const (
 	columnKeyCount       = "count"
 )
 
-var (
-	customBorder = table.Border{
-		Top:    "─",
-		Left:   "│",
-		Right:  "│",
-		Bottom: "─",
+var customBorder = table.Border{
+	Top:    "─",
+	Left:   "│",
+	Right:  "│",
+	Bottom: "─",
 
-		TopRight:    "╮",
-		TopLeft:     "╭",
-		BottomRight: "╯",
-		BottomLeft:  "╰",
+	TopRight:    "╮",
+	TopLeft:     "╭",
+	BottomRight: "╯",
+	BottomLeft:  "╰",
 
-		TopJunction:    "╥",
-		LeftJunction:   "├",
-		RightJunction:  "┤",
-		BottomJunction: "╨",
-		InnerJunction:  "╫",
+	TopJunction:    "╥",
+	LeftJunction:   "├",
+	RightJunction:  "┤",
+	BottomJunction: "╨",
+	InnerJunction:  "╫",
 
-		InnerDivider: "║",
-	}
-)
-
-type Model struct {
-	tableModel table.Model
+	InnerDivider: "║",
 }
 
-func NewModel() Model {
+type Model struct {
+	tableModel *table.Model
+}
+
+func NewModel() *Model {
 	columns := []table.Column{
 		table.NewColumn(columnKeyID, "ID", 5).WithStyle(
 			lipgloss.NewStyle().
@@ -96,7 +94,7 @@ func NewModel() Model {
 	keys.RowDown.SetKeys("j", "down", "s")
 	keys.RowUp.SetKeys("k", "up", "w")
 
-	model := Model{
+	model := &Model{
 		// Throw features in... the point is not to look good, it's just reference!
 		tableModel: table.New(columns).
 			WithRows(rows).
@@ -126,7 +124,7 @@ func NewModel() Model {
 	return model
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
@@ -143,7 +141,7 @@ func (m *Model) updateFooter() {
 	m.tableModel = m.tableModel.WithStaticFooter(footerText)
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -169,7 +167,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	body := strings.Builder{}
 
 	body.WriteString("A (chaotic) table demo with all features enabled!\n")

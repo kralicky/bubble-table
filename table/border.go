@@ -317,7 +317,7 @@ func (b *Border) generateSingleCellStyle() {
 
 // BorderDefault uses the basic square border, useful to reset the border if
 // it was changed somehow.
-func (m Model) BorderDefault() Model {
+func (m *Model) BorderDefault() *Model {
 	// Already generated styles
 	m.border = borderDefault
 
@@ -325,7 +325,7 @@ func (m Model) BorderDefault() Model {
 }
 
 // BorderRounded uses a thin, rounded border.
-func (m Model) BorderRounded() Model {
+func (m *Model) BorderRounded() *Model {
 	// Already generated styles
 	m.border = borderRounded
 
@@ -333,7 +333,7 @@ func (m Model) BorderRounded() Model {
 }
 
 // Border uses the given border components to render the table.
-func (m Model) Border(border Border) Model {
+func (m *Model) Border(border Border) *Model {
 	border.generateStyles()
 
 	m.border = border
@@ -357,7 +357,7 @@ func (b *borderStyleRow) inherit(s lipgloss.Style) {
 // harder to follow. So just be careful with comments and make sure it's tested!
 //
 //nolint:nestif
-func (m Model) styleHeaders() borderStyleRow {
+func (m *Model) styleHeaders() borderStyleRow {
 	hasRows := len(m.GetVisibleRows()) > 0 || m.calculatePadding(0) > 0
 	singleColumn := len(m.columns) == 1
 	styles := borderStyleRow{}
@@ -406,7 +406,7 @@ func (m Model) styleHeaders() borderStyleRow {
 	return styles
 }
 
-func (m Model) styleRows() (inner borderStyleRow, last borderStyleRow) {
+func (m *Model) styleRows() (inner borderStyleRow, last borderStyleRow) {
 	if len(m.columns) == 1 {
 		inner.left = m.border.styleSingleColumnInner
 		inner.inner = inner.left

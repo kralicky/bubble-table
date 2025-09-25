@@ -5,11 +5,11 @@ import (
 	"strings"
 )
 
-func (m Model) hasFooter() bool {
+func (m *Model) hasFooter() bool {
 	return m.footerVisible && (m.staticFooter != "" || m.pageSize != 0 || m.filtered)
 }
 
-func (m Model) renderFooter(width int, includeTop bool) string {
+func (m *Model) renderFooter(width int, includeTop bool) string {
 	if !m.hasFooter() {
 		return ""
 	}

@@ -11,14 +11,14 @@ import (
 )
 
 type Model struct {
-	table3x3 table.Model
-	table1x3 table.Model
-	table3x1 table.Model
-	table1x1 table.Model
-	table5x5 table.Model
+	table3x3 *table.Model
+	table1x3 *table.Model
+	table3x1 *table.Model
+	table1x1 *table.Model
+	table5x5 *table.Model
 }
 
-func genTable(columnCount int, rowCount int) table.Model {
+func genTable(columnCount int, rowCount int) *table.Model {
 	columns := []table.Column{}
 
 	for column := 0; column < columnCount; column++ {
@@ -42,8 +42,8 @@ func genTable(columnCount int, rowCount int) table.Model {
 	return table.New(columns).WithRows(rows).HeaderStyle(lipgloss.NewStyle().Bold(true))
 }
 
-func NewModel() Model {
-	return Model{
+func NewModel() *Model {
+	return &Model{
 		table1x1: genTable(1, 1),
 		table3x1: genTable(3, 1),
 		table1x3: genTable(1, 3),
@@ -52,11 +52,11 @@ func NewModel() Model {
 	}
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -88,7 +88,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	body := strings.Builder{}
 
 	body.WriteString("Table demo with various sized tables!\nPress q or ctrl+c to quit\n")

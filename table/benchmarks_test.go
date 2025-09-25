@@ -7,7 +7,7 @@ import (
 
 var benchView string
 
-func benchTable(numColumns, numDataRows int) Model {
+func benchTable(numColumns, numDataRows int) *Model {
 	columns := []Column{}
 
 	for i := 0; i < numColumns; i++ {

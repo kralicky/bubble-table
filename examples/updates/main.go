@@ -24,7 +24,7 @@ var (
 )
 
 type Model struct {
-	table table.Model
+	table *table.Model
 
 	updateDelay time.Duration
 
@@ -52,8 +52,8 @@ func rowStyleFunc(input table.RowStyleFuncInput) lipgloss.Style {
 	return calculatedStyle
 }
 
-func NewModel() Model {
-	return Model{
+func NewModel() *Model {
+	return &Model{
 		table:       table.New(generateColumns(0)).WithRowStyleFunc(rowStyleFunc),
 		updateDelay: time.Second,
 	}
@@ -92,11 +92,11 @@ func generateColumns(numCritical int) []table.Column {
 	}
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return refreshDataCmd
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -147,7 +147,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	body := strings.Builder{}
 
 	body.WriteString(
@@ -180,7 +180,6 @@ func generateRowsFromData(data []*SomeData) []table.Row {
 }
 
 func main() {
-
 	p := tea.NewProgram(NewModel())
 
 	if err := p.Start(); err != nil {

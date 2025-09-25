@@ -28,14 +28,14 @@ type RowStyleFuncInput struct {
 // data-based styles.  It can be safely set to nil to remove it later.
 // This style is applied after the base style and before individual row styles.
 // This will override any HighlightStyle settings.
-func (m Model) WithRowStyleFunc(f func(RowStyleFuncInput) lipgloss.Style) Model {
+func (m *Model) WithRowStyleFunc(f func(RowStyleFuncInput) lipgloss.Style) *Model {
 	m.rowStyleFunc = f
 
 	return m
 }
 
 // WithHighlightedRow sets the highlighted row to the given index.
-func (m Model) WithHighlightedRow(index int) Model {
+func (m *Model) WithHighlightedRow(index int) *Model {
 	m.rowCursorIndex = index
 
 	if m.rowCursorIndex >= len(m.GetVisibleRows()) {
@@ -52,14 +52,14 @@ func (m Model) WithHighlightedRow(index int) Model {
 }
 
 // HeaderStyle sets the style to apply to the header text, such as color or bold.
-func (m Model) HeaderStyle(style lipgloss.Style) Model {
+func (m *Model) HeaderStyle(style lipgloss.Style) *Model {
 	m.headerStyle = style.Copy()
 
 	return m
 }
 
 // WithRows sets the rows to show as data in the table.
-func (m Model) WithRows(rows []Row) Model {
+func (m *Model) WithRows(rows []Row) *Model {
 	m.rows = rows
 	m.visibleRowCacheUpdated = false
 
@@ -84,20 +84,20 @@ func (m Model) WithRows(rows []Row) Model {
 }
 
 // WithKeyMap sets the key map to use for controls when focused.
-func (m Model) WithKeyMap(keyMap KeyMap) Model {
+func (m *Model) WithKeyMap(keyMap KeyMap) *Model {
 	m.keyMap = keyMap
 
 	return m
 }
 
 // KeyMap returns a copy of the current key map in use.
-func (m Model) KeyMap() KeyMap {
+func (m *Model) KeyMap() KeyMap {
 	return m.keyMap
 }
 
 // SelectableRows sets whether or not rows are selectable.  If set, adds a column
 // in the front that acts as a checkbox and responds to controls if Focused.
-func (m Model) SelectableRows(selectable bool) Model {
+func (m *Model) SelectableRows(selectable bool) *Model {
 	m.selectableRows = selectable
 
 	hasSelectColumn := len(m.columns) > 0 && m.columns[0].key == columnKeySelect
@@ -118,7 +118,7 @@ func (m Model) SelectableRows(selectable bool) Model {
 }
 
 // HighlightedRow returns the full Row that's currently highlighted by the user.
-func (m Model) HighlightedRow() Row {
+func (m *Model) HighlightedRow() Row {
 	if len(m.GetVisibleRows()) > 0 {
 		return m.GetVisibleRows()[m.rowCursorIndex]
 	}
@@ -128,7 +128,7 @@ func (m Model) HighlightedRow() Row {
 }
 
 // SelectedRows returns all rows that have been set as selected by the user.
-func (m Model) SelectedRows() []Row {
+func (m *Model) SelectedRows() []Row {
 	selectedRows := []Row{}
 
 	for _, row := range m.GetVisibleRows() {
@@ -143,7 +143,7 @@ func (m Model) SelectedRows() []Row {
 // HighlightStyle sets a custom style to use when the row is being highlighted
 // by the cursor.  This should not be used with WithRowStyleFunc.  Instead, use
 // the IsHighlighted field in the style function.
-func (m Model) HighlightStyle(style lipgloss.Style) Model {
+func (m *Model) HighlightStyle(style lipgloss.Style) *Model {
 	m.highlightStyle = style
 
 	return m
@@ -151,14 +151,14 @@ func (m Model) HighlightStyle(style lipgloss.Style) Model {
 
 // Focused allows the table to show highlighted rows and take in controls of
 // up/down/space/etc to let the user navigate the table and interact with it.
-func (m Model) Focused(focused bool) Model {
+func (m *Model) Focused(focused bool) *Model {
 	m.focused = focused
 
 	return m
 }
 
 // Filtered allows the table to show rows that match the filter.
-func (m Model) Filtered(filtered bool) Model {
+func (m *Model) Filtered(filtered bool) *Model {
 	m.filtered = filtered
 	m.visibleRowCacheUpdated = false
 
@@ -170,14 +170,14 @@ func (m Model) Filtered(filtered bool) Model {
 }
 
 // StartFilterTyping focuses the text input to allow user typing to filter.
-func (m Model) StartFilterTyping() Model {
+func (m *Model) StartFilterTyping() *Model {
 	m.filterTextInput.Focus()
 
 	return m
 }
 
 // WithStaticFooter adds a footer that only displays the given text.
-func (m Model) WithStaticFooter(footer string) Model {
+func (m *Model) WithStaticFooter(footer string) *Model {
 	m.staticFooter = footer
 
 	if m.minimumHeight > 0 {
@@ -189,7 +189,7 @@ func (m Model) WithStaticFooter(footer string) Model {
 
 // WithPageSize enables pagination using the given page size.  This can be called
 // again at any point to resize the height of the table.
-func (m Model) WithPageSize(pageSize int) Model {
+func (m *Model) WithPageSize(pageSize int) *Model {
 	m.pageSize = pageSize
 
 	maxPages := m.MaxPages()
@@ -206,7 +206,7 @@ func (m Model) WithPageSize(pageSize int) Model {
 }
 
 // WithNoPagination disables pagination in the table.
-func (m Model) WithNoPagination() Model {
+func (m *Model) WithNoPagination() *Model {
 	m.pageSize = 0
 
 	if m.minimumHeight > 0 {
@@ -218,7 +218,7 @@ func (m Model) WithNoPagination() Model {
 
 // WithPaginationWrapping sets whether to wrap around from the beginning to the
 // end when navigating through pages.  Defaults to true.
-func (m Model) WithPaginationWrapping(wrapping bool) Model {
+func (m *Model) WithPaginationWrapping(wrapping bool) *Model {
 	m.paginationWrapping = wrapping
 
 	return m
@@ -226,7 +226,7 @@ func (m Model) WithPaginationWrapping(wrapping bool) Model {
 
 // WithSelectedText describes what text to show when selectable rows are enabled.
 // The selectable column header will use the selected text string.
-func (m Model) WithSelectedText(unselected, selected string) Model {
+func (m *Model) WithSelectedText(unselected, selected string) *Model {
 	m.selectedText = selected
 	m.unselectedText = unselected
 
@@ -240,7 +240,7 @@ func (m Model) WithSelectedText(unselected, selected string) Model {
 
 // WithBaseStyle applies a base style as the default for everything in the table.
 // This is useful for border colors, default alignment, default color, etc.
-func (m Model) WithBaseStyle(style lipgloss.Style) Model {
+func (m *Model) WithBaseStyle(style lipgloss.Style) *Model {
 	m.baseStyle = style
 
 	return m
@@ -249,7 +249,7 @@ func (m Model) WithBaseStyle(style lipgloss.Style) Model {
 // WithTargetWidth sets the total target width of the table, including borders.
 // This only takes effect when using flex columns.  When using flex columns,
 // columns will stretch to fill out to the total width given here.
-func (m Model) WithTargetWidth(totalWidth int) Model {
+func (m *Model) WithTargetWidth(totalWidth int) *Model {
 	m.targetTotalWidth = totalWidth
 
 	m.recalculateWidth()
@@ -258,7 +258,7 @@ func (m Model) WithTargetWidth(totalWidth int) Model {
 }
 
 // WithMinimumHeight sets the minimum total height of the table, including borders.
-func (m Model) WithMinimumHeight(minimumHeight int) Model {
+func (m *Model) WithMinimumHeight(minimumHeight int) *Model {
 	m.minimumHeight = minimumHeight
 
 	m.recalculateHeight()
@@ -268,7 +268,7 @@ func (m Model) WithMinimumHeight(minimumHeight int) Model {
 
 // PageDown goes to the next page of a paginated table, wrapping to the first
 // page if the table is already on the last page.
-func (m Model) PageDown() Model {
+func (m *Model) PageDown() *Model {
 	m.pageDown()
 
 	return m
@@ -276,21 +276,21 @@ func (m Model) PageDown() Model {
 
 // PageUp goes to the previous page of a paginated table, wrapping to the
 // last page if the table is already on the first page.
-func (m Model) PageUp() Model {
+func (m *Model) PageUp() *Model {
 	m.pageUp()
 
 	return m
 }
 
 // PageLast goes to the last page of a paginated table.
-func (m Model) PageLast() Model {
+func (m *Model) PageLast() *Model {
 	m.pageLast()
 
 	return m
 }
 
 // PageFirst goes to the first page of a paginated table.
-func (m Model) PageFirst() Model {
+func (m *Model) PageFirst() *Model {
 	m.pageFirst()
 
 	return m
@@ -299,7 +299,7 @@ func (m Model) PageFirst() Model {
 // WithCurrentPage sets the current page (1 as the first page) of a paginated
 // table, bounded to the total number of pages.  The current selected row will
 // be set to the top row of the page if the page changed.
-func (m Model) WithCurrentPage(currentPage int) Model {
+func (m *Model) WithCurrentPage(currentPage int) *Model {
 	if m.pageSize == 0 || currentPage == m.CurrentPage() {
 		return m
 	}
@@ -320,7 +320,7 @@ func (m Model) WithCurrentPage(currentPage int) Model {
 
 // WithColumns sets the visible columns for the table, so that columns can be
 // added/removed/resized or headers rewritten.
-func (m Model) WithColumns(columns []Column) Model {
+func (m *Model) WithColumns(columns []Column) *Model {
 	// Deep copy to avoid edits
 	m.columns = make([]Column, len(columns))
 	copy(m.columns, columns)
@@ -338,7 +338,7 @@ func (m Model) WithColumns(columns []Column) Model {
 // WithFilterInput makes the table use the provided text input bubble for
 // filtering rather than using the built-in default.  This allows for external
 // text input controls to be used.
-func (m Model) WithFilterInput(input textinput.Model) Model {
+func (m *Model) WithFilterInput(input textinput.Model) *Model {
 	if m.filterTextInput.Value() != input.Value() {
 		m.pageFirst()
 	}
@@ -352,7 +352,7 @@ func (m Model) WithFilterInput(input textinput.Model) Model {
 // WithFilterInputValue sets the filter value to the given string, immediately
 // applying it as if the user had typed it in.  Useful for external filter inputs
 // that are not necessarily a text input.
-func (m Model) WithFilterInputValue(value string) Model {
+func (m *Model) WithFilterInputValue(value string) *Model {
 	if m.filterTextInput.Value() != value {
 		m.pageFirst()
 	}
@@ -368,7 +368,7 @@ func (m Model) WithFilterInputValue(value string) Model {
 // true, the row will be included in the filtered results. If the function
 // is nil, the function won't be used and instead the default filtering will be applied,
 // if any.
-func (m Model) WithFilterFunc(shouldInclude FilterFunc) Model {
+func (m *Model) WithFilterFunc(shouldInclude FilterFunc) *Model {
 	m.filterFunc = shouldInclude
 
 	m.visibleRowCacheUpdated = false
@@ -377,12 +377,12 @@ func (m Model) WithFilterFunc(shouldInclude FilterFunc) Model {
 }
 
 // WithFuzzyFilter enables fuzzy filtering for the table.
-func (m Model) WithFuzzyFilter() Model {
+func (m *Model) WithFuzzyFilter() *Model {
 	return m.WithFilterFunc(filterFuncFuzzy)
 }
 
 // WithFooterVisibility sets the visibility of the footer.
-func (m Model) WithFooterVisibility(visibility bool) Model {
+func (m *Model) WithFooterVisibility(visibility bool) *Model {
 	m.footerVisible = visibility
 
 	if m.minimumHeight > 0 {
@@ -393,7 +393,7 @@ func (m Model) WithFooterVisibility(visibility bool) Model {
 }
 
 // WithHeaderVisibility sets the visibility of the header.
-func (m Model) WithHeaderVisibility(visibility bool) Model {
+func (m *Model) WithHeaderVisibility(visibility bool) *Model {
 	m.headerVisible = visibility
 
 	if m.minimumHeight > 0 {
@@ -407,7 +407,7 @@ func (m Model) WithHeaderVisibility(visibility bool) Model {
 // If this width is exceeded by either the target width or by the total width
 // of all the columns (including borders!), anything extra will be treated as
 // overflow and horizontal scrolling will be enabled to see the rest.
-func (m Model) WithMaxTotalWidth(maxTotalWidth int) Model {
+func (m *Model) WithMaxTotalWidth(maxTotalWidth int) *Model {
 	m.maxTotalWidth = maxTotalWidth
 
 	m.recalculateWidth()
@@ -418,7 +418,7 @@ func (m Model) WithMaxTotalWidth(maxTotalWidth int) Model {
 // WithHorizontalFreezeColumnCount freezes the given number of columns to the
 // left side.  This is useful for things like ID or Name columns that should
 // always be visible even when scrolling.
-func (m Model) WithHorizontalFreezeColumnCount(columnsToFreeze int) Model {
+func (m *Model) WithHorizontalFreezeColumnCount(columnsToFreeze int) *Model {
 	m.horizontalScrollFreezeColumnsCount = columnsToFreeze
 
 	m.recalculateWidth()
@@ -427,14 +427,14 @@ func (m Model) WithHorizontalFreezeColumnCount(columnsToFreeze int) Model {
 }
 
 // ScrollRight moves one column to the right.  Use with WithMaxTotalWidth.
-func (m Model) ScrollRight() Model {
+func (m *Model) ScrollRight() *Model {
 	m.scrollRight()
 
 	return m
 }
 
 // ScrollLeft moves one column to the left.  Use with WithMaxTotalWidth.
-func (m Model) ScrollLeft() Model {
+func (m *Model) ScrollLeft() *Model {
 	m.scrollLeft()
 
 	return m
@@ -444,7 +444,7 @@ func (m Model) ScrollLeft() Model {
 // not found in a given row.  Note that this is for completely missing data,
 // an empty string or other zero value that is explicitly set is not considered
 // to be missing.
-func (m Model) WithMissingDataIndicator(str string) Model {
+func (m *Model) WithMissingDataIndicator(str string) *Model {
 	m.missingDataIndicator = str
 
 	return m
@@ -454,14 +454,14 @@ func (m Model) WithMissingDataIndicator(str string) Model {
 // a column is not found in a given row.  Note that this is for completely
 // missing data, an empty string or other zero value that is explicitly set is
 // not considered to be missing.
-func (m Model) WithMissingDataIndicatorStyled(styled StyledCell) Model {
+func (m *Model) WithMissingDataIndicatorStyled(styled StyledCell) *Model {
 	m.missingDataIndicator = styled
 
 	return m
 }
 
 // WithAllRowsDeselected deselects any rows that are currently selected.
-func (m Model) WithAllRowsDeselected() Model {
+func (m *Model) WithAllRowsDeselected() *Model {
 	rows := m.GetVisibleRows()
 
 	for i, row := range rows {
@@ -476,14 +476,14 @@ func (m Model) WithAllRowsDeselected() Model {
 }
 
 // WithMultiline sets whether or not to wrap text in cells to multiple lines.
-func (m Model) WithMultiline(multiline bool) Model {
+func (m *Model) WithMultiline(multiline bool) *Model {
 	m.multiline = multiline
 
 	return m
 }
 
 // WithAdditionalShortHelpKeys enables you to add more keybindings to the 'short help' view.
-func (m Model) WithAdditionalShortHelpKeys(keys []key.Binding) Model {
+func (m *Model) WithAdditionalShortHelpKeys(keys []key.Binding) *Model {
 	m.additionalShortHelpKeys = func() []key.Binding {
 		return keys
 	}
@@ -492,7 +492,7 @@ func (m Model) WithAdditionalShortHelpKeys(keys []key.Binding) Model {
 }
 
 // WithAdditionalFullHelpKeys enables you to add more keybindings to the 'full help' view.
-func (m Model) WithAdditionalFullHelpKeys(keys []key.Binding) Model {
+func (m *Model) WithAdditionalFullHelpKeys(keys []key.Binding) *Model {
 	m.additionalFullHelpKeys = func() []key.Binding {
 		return keys
 	}
@@ -503,7 +503,7 @@ func (m Model) WithAdditionalFullHelpKeys(keys []key.Binding) Model {
 // WithGlobalMetadata applies the given metadata to the table. This metadata is passed to
 // some functions in FilterFuncInput and StyleFuncInput to enable more advanced decisions,
 // such as setting some global theme variable to reference, etc. Has no effect otherwise.
-func (m Model) WithGlobalMetadata(metadata map[string]any) Model {
+func (m *Model) WithGlobalMetadata(metadata map[string]any) *Model {
 	m.metadata = metadata
 
 	return m

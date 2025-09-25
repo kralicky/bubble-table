@@ -10,7 +10,7 @@ import (
 // composed with other elements more consistently.
 //
 //nolint:cyclop
-func (m Model) View() string {
+func (m *Model) View() string {
 	// Safety valve for empty tables
 	if len(m.columns) == 0 {
 		return ""

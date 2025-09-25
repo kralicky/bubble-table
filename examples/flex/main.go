@@ -22,7 +22,7 @@ const (
 )
 
 type Model struct {
-	flexTable table.Model
+	flexTable *table.Model
 
 	// Window dimensions
 	totalWidth  int
@@ -33,8 +33,8 @@ type Model struct {
 	verticalMargin   int
 }
 
-func NewModel() Model {
-	return Model{
+func NewModel() *Model {
+	return &Model{
 		flexTable: table.New([]table.Column{
 			table.NewColumn(columnKeyName, "Name", 10),
 			// This table uses flex columns, but it will still need a target
@@ -59,11 +59,11 @@ func NewModel() Model {
 	}
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -119,15 +119,15 @@ func (m *Model) recalculateTable() {
 		WithMinimumHeight(m.calculateHeight())
 }
 
-func (m Model) calculateWidth() int {
+func (m *Model) calculateWidth() int {
 	return m.totalWidth - m.horizontalMargin
 }
 
-func (m Model) calculateHeight() int {
+func (m *Model) calculateHeight() int {
 	return m.totalHeight - m.verticalMargin - fixedVerticalMargin
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	strs := []string{
 		"A flexible table that fills available space (Name column is fixed-width)",
 		fmt.Sprintf("Target size: %d W ⨉ %d H (arrow keys to adjust)",

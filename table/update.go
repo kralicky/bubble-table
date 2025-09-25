@@ -51,7 +51,7 @@ func (m *Model) toggleSelect() {
 	})
 }
 
-func (m Model) updateFilterTextInput(msg tea.Msg) (Model, tea.Cmd) {
+func (m *Model) updateFilterTextInput(msg tea.Msg) (*Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -127,7 +127,7 @@ func (m *Model) handleKeypress(msg tea.KeyMsg) {
 }
 
 // Update responds to input from the user or other messages from Bubble Tea.
-func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (*Model, tea.Cmd) {
 	m.clearUserEvents()
 
 	if !m.focused {

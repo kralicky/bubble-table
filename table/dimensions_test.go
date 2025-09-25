@@ -169,7 +169,7 @@ func TestRecalculateHeight(t *testing.T) {
 
 	tests := []struct {
 		name           string
-		model          Model
+		model          *Model
 		expectedHeight int
 	}{
 		{

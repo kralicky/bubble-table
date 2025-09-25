@@ -25,7 +25,7 @@ type FilterFuncInput struct {
 // or false if the row should be hidden.
 type FilterFunc func(FilterFuncInput) bool
 
-func (m Model) getFilteredRows(rows []Row) []Row {
+func (m *Model) getFilteredRows(rows []Row) []Row {
 	filterInputValue := m.filterTextInput.Value()
 	if !m.filtered || filterInputValue == "" {
 		return rows

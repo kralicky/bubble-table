@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/charmbracelet/bubbles/textinput"
 	"log"
 	"strings"
+
+	"github.com/charmbracelet/bubbles/textinput"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/evertras/bubble-table/table"
@@ -16,18 +17,18 @@ const (
 )
 
 type Model struct {
-	table           table.Model
+	table           *table.Model
 	filterTextInput textinput.Model
 }
 
-func NewModel() Model {
+func NewModel() *Model {
 	columns := []table.Column{
 		table.NewColumn(columnKeyTitle, "Title", 13).WithFiltered(true),
 		table.NewColumn(columnKeyAuthor, "Author", 13).WithFiltered(true),
 		table.NewColumn(columnKeyDescription, "Description", 50),
 	}
 
-	return Model{
+	return &Model{
 		table: table.
 			New(columns).
 			Filtered(true).
@@ -60,11 +61,11 @@ func NewModel() Model {
 	}
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -106,7 +107,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	body := strings.Builder{}
 
 	body.WriteString("A filtered simple default table\n" +

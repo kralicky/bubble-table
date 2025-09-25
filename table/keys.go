@@ -86,7 +86,7 @@ func DefaultKeyMap() KeyMap {
 
 // FullHelp returns a multi row view of all the helpkeys that are defined. Needed to fullfil the 'help.Model' interface.
 // Also appends all user defined extra keys to the help.
-func (m Model) FullHelp() [][]key.Binding {
+func (m *Model) FullHelp() [][]key.Binding {
 	keyBinds := [][]key.Binding{
 		{m.keyMap.RowDown, m.keyMap.RowUp, m.keyMap.RowSelectToggle},
 		{m.keyMap.PageDown, m.keyMap.PageUp, m.keyMap.PageFirst, m.keyMap.PageLast},
@@ -101,7 +101,7 @@ func (m Model) FullHelp() [][]key.Binding {
 
 // ShortHelp just returns a single row of help views. Needed to fullfil the 'help.Model' interface.
 // Also appends all user defined extra keys to the help.
-func (m Model) ShortHelp() []key.Binding {
+func (m *Model) ShortHelp() []key.Binding {
 	keyBinds := []key.Binding{
 		m.keyMap.RowDown,
 		m.keyMap.RowUp,

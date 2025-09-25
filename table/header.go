@@ -6,7 +6,7 @@ import "github.com/charmbracelet/lipgloss"
 // to pick it apart right now.
 //
 //nolint:funlen,cyclop
-func (m Model) renderHeaders() string {
+func (m *Model) renderHeaders() string {
 	headerStrings := []string{}
 
 	totalRenderedWidth := 0

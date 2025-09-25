@@ -54,7 +54,7 @@ func (r Row) WithStyle(style lipgloss.Style) Row {
 }
 
 //nolint:cyclop,funlen // Breaking this up will be more complicated than it's worth for now
-func (m Model) renderRowColumnData(row Row, column Column, rowStyle lipgloss.Style, borderStyle lipgloss.Style) string {
+func (m *Model) renderRowColumnData(row Row, column Column, rowStyle lipgloss.Style, borderStyle lipgloss.Style) string {
 	cellStyle := rowStyle.Copy().Inherit(column.style).Inherit(m.baseStyle)
 
 	var str string
@@ -120,7 +120,7 @@ func (m Model) renderRowColumnData(row Row, column Column, rowStyle lipgloss.Sty
 	return cellStr
 }
 
-func (m Model) renderRow(rowIndex int, last bool) string {
+func (m *Model) renderRow(rowIndex int, last bool) string {
 	row := m.GetVisibleRows()[rowIndex]
 	highlighted := rowIndex == m.rowCursorIndex
 
@@ -141,7 +141,7 @@ func (m Model) renderRow(rowIndex int, last bool) string {
 	return m.renderRowData(row, rowStyle, last)
 }
 
-func (m Model) renderBlankRow(last bool) string {
+func (m *Model) renderBlankRow(last bool) string {
 	return m.renderRowData(NewRow(nil), lipgloss.NewStyle(), last)
 }
 
@@ -149,7 +149,7 @@ func (m Model) renderBlankRow(last bool) string {
 // how to pick it apart yet.
 //
 //nolint:funlen, cyclop
-func (m Model) renderRowData(row Row, rowStyle lipgloss.Style, last bool) string {
+func (m *Model) renderRowData(row Row, rowStyle lipgloss.Style, last bool) string {
 	numColumns := len(m.columns)
 
 	columnStrings := []string{}

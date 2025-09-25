@@ -79,14 +79,14 @@ func (p Pokemon) ToRow() table.Row {
 }
 
 type Model struct {
-	pokeTable table.Model
+	pokeTable *table.Model
 
 	currentPokemonData Pokemon
 
 	lastSelectedEvent table.UserEventRowSelectToggled
 }
 
-func NewModel() Model {
+func NewModel() *Model {
 	pokemon := []Pokemon{
 		NewPokemon("Pikachu", elementElectric, 2300648, 21.9, 8.54),
 		NewPokemon("Eevee", elementNormal, 636373, 26.4, 7.37),
@@ -103,7 +103,7 @@ func NewModel() Model {
 		rows = append(rows, p.ToRow())
 	}
 
-	return Model{
+	return &Model{
 		pokeTable: table.New([]table.Column{
 			table.NewColumn(columnKeyName, "Name", 13),
 			table.NewColumn(columnKeyElement, "Element", 10),
@@ -117,11 +117,11 @@ func NewModel() Model {
 	}
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -164,7 +164,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	view := lipgloss.JoinVertical(
 		lipgloss.Left,
 		styleSubtle.Render("Press q or ctrl+c to quit"),

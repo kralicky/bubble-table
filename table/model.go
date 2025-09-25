@@ -11,9 +11,7 @@ const (
 	columnKeySelect = "___select___"
 )
 
-var (
-	defaultHighlightStyle = lipgloss.NewStyle().Background(lipgloss.Color("#334"))
-)
+var defaultHighlightStyle = lipgloss.NewStyle().Background(lipgloss.Color("#334"))
 
 // Model is the main table model.  Create using New().
 type Model struct {
@@ -112,7 +110,7 @@ type Model struct {
 }
 
 // New creates a new table ready for further modifications.
-func New(columns []Column) Model {
+func New(columns []Column) *Model {
 	filterInput := textinput.New()
 	filterInput.Prompt = "/"
 	model := Model{
@@ -139,10 +137,10 @@ func New(columns []Column) Model {
 
 	model.recalculateWidth()
 
-	return model
+	return &model
 }
 
 // Init initializes the table per the Bubble Tea architecture.
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }

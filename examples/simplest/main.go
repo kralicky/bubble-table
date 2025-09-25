@@ -14,11 +14,11 @@ const (
 )
 
 type Model struct {
-	simpleTable table.Model
+	simpleTable *table.Model
 }
 
-func NewModel() Model {
-	return Model{
+func NewModel() *Model {
+	return &Model{
 		simpleTable: table.New([]table.Column{
 			table.NewColumn(columnKeyName, "Name", 13),
 			table.NewColumn(columnKeyElement, "Element", 10),
@@ -35,11 +35,11 @@ func NewModel() Model {
 	}
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -59,7 +59,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	body := strings.Builder{}
 
 	body.WriteString("A very simple default table (non-interactive)\nPress q or ctrl+c to quit\n\n")

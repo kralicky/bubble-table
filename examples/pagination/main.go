@@ -12,8 +12,8 @@ import (
 )
 
 type Model struct {
-	tableDefault        table.Model
-	tableWithRowIndices table.Model
+	tableDefault        *table.Model
+	tableWithRowIndices *table.Model
 
 	rowCount int
 }
@@ -35,7 +35,7 @@ func genRows(columnCount int, rowCount int) []table.Row {
 	return rows
 }
 
-func genTable(columnCount int, rowCount int) table.Model {
+func genTable(columnCount int, rowCount int) *table.Model {
 	columns := []table.Column{}
 
 	for column := 0; column < columnCount; column++ {
@@ -48,10 +48,10 @@ func genTable(columnCount int, rowCount int) table.Model {
 	return table.New(columns).WithRows(rows).HeaderStyle(lipgloss.NewStyle().Bold(true))
 }
 
-func NewModel() Model {
+func NewModel() *Model {
 	const startingRowCount = 105
 
-	m := Model{
+	m := &Model{
 		rowCount:            startingRowCount,
 		tableDefault:        genTable(3, startingRowCount).WithPageSize(10).Focused(true),
 		tableWithRowIndices: genTable(3, startingRowCount).WithPageSize(10).Focused(false),
@@ -67,11 +67,11 @@ func (m *Model) regenTableRows() {
 	m.tableWithRowIndices = m.tableWithRowIndices.WithRows(genRows(3, m.rowCount))
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -132,7 +132,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	body := strings.Builder{}
 
 	body.WriteString("Table demo with pagination! Press left/right to move pages, or use page up/down, or 'r' to jump to a random page\nPress 'a' for left table, 'b' for right table\nPress 'z' to reduce rows by 10, 'y' to increase rows by 10\nPress 'u' to decrease page size by 1, 'i' to increase page size by 1\nPress q or ctrl+c to quit\n\n")

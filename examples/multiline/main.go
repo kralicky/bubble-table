@@ -16,10 +16,10 @@ const (
 )
 
 type Model struct {
-	tableModel table.Model
+	tableModel *table.Model
 }
 
-func NewModel() Model {
+func NewModel() *Model {
 	columns := []table.Column{
 		table.NewColumn(columnKeyName, "Name", 10).WithStyle(
 			lipgloss.NewStyle().
@@ -56,7 +56,6 @@ func NewModel() Model {
 			}),
 		table.NewRow(
 			table.RowData{
-
 				columnKeyName:     "Leslie Kerr",
 				columnKeyCountry:  "Singapore",
 				columnKeyCurrency: "$70.54",
@@ -105,7 +104,7 @@ func NewModel() Model {
 			}),
 	}
 
-	model := Model{
+	model := &Model{
 		tableModel: table.New(columns).
 			WithRows(rows).
 			HeaderStyle(lipgloss.NewStyle().Foreground(lipgloss.Color("10")).Bold(true)).
@@ -122,11 +121,11 @@ func NewModel() Model {
 	return model
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -146,7 +145,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	body := strings.Builder{}
 
 	body.WriteString("A table demo with multiline feature enabled!\n")

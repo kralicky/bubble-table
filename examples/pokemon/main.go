@@ -32,7 +32,7 @@ var (
 )
 
 type Model struct {
-	pokeTable            table.Model
+	pokeTable            *table.Model
 	favoriteElementIndex int
 }
 
@@ -83,9 +83,9 @@ func genMetadata(favoriteElementIndex int) map[string]any {
 	}
 }
 
-func NewModel() Model {
+func NewModel() *Model {
 	initialFavoriteElementIndex := 0
-	return Model{
+	return &Model{
 		favoriteElementIndex: initialFavoriteElementIndex,
 		pokeTable: table.New([]table.Column{
 			table.NewColumn(columnKeyName, "Name", 13),
@@ -115,11 +115,11 @@ func NewModel() Model {
 	}
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -147,7 +147,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	selected := m.pokeTable.HighlightedRow().Data[columnKeyName].(string)
 	view := lipgloss.JoinVertical(
 		lipgloss.Left,

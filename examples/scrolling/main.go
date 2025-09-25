@@ -21,7 +21,7 @@ const (
 )
 
 type Model struct {
-	scrollableTable table.Model
+	scrollableTable *table.Model
 }
 
 func colKey(colNum int) string {
@@ -40,7 +40,7 @@ func genRow(id int) table.Row {
 	return table.NewRow(data)
 }
 
-func NewModel() Model {
+func NewModel() *Model {
 	rows := []table.Row{}
 
 	for i := 0; i < numRows; i++ {
@@ -62,16 +62,16 @@ func NewModel() Model {
 		WithStaticFooter("A footer").
 		Focused(true)
 
-	return Model{
+	return &Model{
 		scrollableTable: t,
 	}
 }
 
-func (m Model) Init() tea.Cmd {
+func (m *Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
 		cmd  tea.Cmd
 		cmds []tea.Cmd
@@ -91,7 +91,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Model) View() string {
+func (m *Model) View() string {
 	body := strings.Builder{}
 
 	body.WriteString("A scrollable table\nPress shift+left or shift+right to scroll\nPress q or ctrl+c to quit\n\n")
