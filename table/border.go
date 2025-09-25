@@ -22,6 +22,8 @@ type Border struct {
 
 	InnerDivider string
 
+	Dividers bool
+
 	// Styles for 2x2 tables and larger
 	styleMultiTopLeft     lipgloss.Style
 	styleMultiTop         lipgloss.Style
@@ -71,6 +73,8 @@ var (
 		InnerJunction:  "╋",
 
 		InnerDivider: "┃",
+
+		Dividers: true,
 	}
 
 	borderRounded = Border{
@@ -91,6 +95,8 @@ var (
 		InnerJunction:  "┼",
 
 		InnerDivider: "│",
+
+		Dividers: true,
 	}
 )
 
@@ -143,13 +149,24 @@ func (b *Border) styleBothWithFooter(original lipgloss.Style) lipgloss.Style {
 //
 //nolint:funlen
 func (b *Border) generateMultiStyles() {
+	rowInnerRightDivider := b.InnerDivider
+	rowInnerBottomRightJunction := b.BottomJunction
+	rowInnerTopJunction := b.TopJunction
+	rowInnerJunction := b.InnerJunction
+	if !b.Dividers {
+		rowInnerRightDivider = " "
+		rowInnerBottomRightJunction = b.Bottom
+		rowInnerTopJunction = b.Top
+		rowInnerJunction = b.Bottom
+	}
+
 	b.styleMultiTopLeft = lipgloss.NewStyle().BorderStyle(
 		lipgloss.Border{
 			TopLeft:     b.TopLeft,
 			Top:         b.Top,
-			TopRight:    b.TopJunction,
-			Right:       b.InnerDivider,
-			BottomRight: b.InnerJunction,
+			TopRight:    rowInnerTopJunction,
+			Right:       rowInnerRightDivider,
+			BottomRight: rowInnerJunction,
 			Bottom:      b.Bottom,
 			BottomLeft:  b.LeftJunction,
 			Left:        b.Left,
@@ -159,11 +176,11 @@ func (b *Border) generateMultiStyles() {
 	b.styleMultiTop = lipgloss.NewStyle().BorderStyle(
 		lipgloss.Border{
 			Top:    b.Top,
-			Right:  b.InnerDivider,
+			Right:  rowInnerRightDivider,
 			Bottom: b.Bottom,
 
-			TopRight:    b.TopJunction,
-			BottomRight: b.InnerJunction,
+			TopRight:    rowInnerTopJunction,
+			BottomRight: rowInnerJunction,
 		},
 	).BorderTop(true).BorderBottom(true).BorderRight(true)
 
@@ -181,7 +198,7 @@ func (b *Border) generateMultiStyles() {
 	b.styleMultiLeft = lipgloss.NewStyle().BorderStyle(
 		lipgloss.Border{
 			Left:  b.Left,
-			Right: b.InnerDivider,
+			Right: rowInnerRightDivider,
 		},
 	).BorderRight(true).BorderLeft(true)
 
@@ -193,27 +210,27 @@ func (b *Border) generateMultiStyles() {
 
 	b.styleMultiInner = lipgloss.NewStyle().BorderStyle(
 		lipgloss.Border{
-			Right: b.InnerDivider,
+			Right: rowInnerRightDivider,
 		},
 	).BorderRight(true)
 
 	b.styleMultiBottomLeft = lipgloss.NewStyle().BorderStyle(
 		lipgloss.Border{
 			Left:   b.Left,
-			Right:  b.InnerDivider,
+			Right:  rowInnerRightDivider,
 			Bottom: b.Bottom,
 
 			BottomLeft:  b.BottomLeft,
-			BottomRight: b.BottomJunction,
+			BottomRight: rowInnerBottomRightJunction,
 		},
 	).BorderLeft(true).BorderBottom(true).BorderRight(true)
 
 	b.styleMultiBottom = lipgloss.NewStyle().BorderStyle(
 		lipgloss.Border{
-			Right:  b.InnerDivider,
+			Right:  rowInnerRightDivider,
 			Bottom: b.Bottom,
 
-			BottomRight: b.BottomJunction,
+			BottomRight: rowInnerBottomRightJunction,
 		},
 	).BorderBottom(true).BorderRight(true)
 
@@ -320,6 +337,7 @@ func (b *Border) generateSingleCellStyle() {
 func (m *Model) BorderDefault() *Model {
 	// Already generated styles
 	m.border = borderDefault
+	m.headerBorder = m.border
 
 	return m
 }
@@ -328,6 +346,7 @@ func (m *Model) BorderDefault() *Model {
 func (m *Model) BorderRounded() *Model {
 	// Already generated styles
 	m.border = borderRounded
+	m.headerBorder = m.border
 
 	return m
 }
@@ -337,7 +356,15 @@ func (m *Model) Border(border Border) *Model {
 	border.generateStyles()
 
 	m.border = border
+	m.headerBorder = m.border
 
+	return m
+}
+
+func (m *Model) HeaderBorder(border Border) *Model {
+	border.generateStyles()
+
+	m.headerBorder = border
 	return m
 }
 
@@ -371,34 +398,34 @@ func (m *Model) styleHeaders() borderStyleRow {
 	if singleColumn {
 		if hasRows {
 			// Single column
-			styles.left = m.border.styleSingleColumnTop
+			styles.left = m.headerBorder.styleSingleColumnTop
 			styles.inner = styles.left
 			styles.right = styles.left
 		} else {
 			// Single cell
-			styles.left = m.border.styleSingleCell
+			styles.left = m.headerBorder.styleSingleCell
 			styles.inner = styles.left
 			styles.right = styles.left
 
 			if m.hasFooter() {
-				styles.left = m.border.styleBothWithFooter(styles.left)
+				styles.left = m.headerBorder.styleBothWithFooter(styles.left)
 			}
 		}
 	} else if !hasRows {
 		// Single row
-		styles.left = m.border.styleSingleRowLeft
-		styles.inner = m.border.styleSingleRowInner
-		styles.right = m.border.styleSingleRowRight
+		styles.left = m.headerBorder.styleSingleRowLeft
+		styles.inner = m.headerBorder.styleSingleRowInner
+		styles.right = m.headerBorder.styleSingleRowRight
 
 		if m.hasFooter() {
-			styles.left = m.border.styleLeftWithFooter(styles.left)
-			styles.right = m.border.styleRightWithFooter(styles.right)
+			styles.left = m.headerBorder.styleLeftWithFooter(styles.left)
+			styles.right = m.headerBorder.styleRightWithFooter(styles.right)
 		}
 	} else {
 		// Multi
-		styles.left = m.border.styleMultiTopLeft
-		styles.inner = m.border.styleMultiTop
-		styles.right = m.border.styleMultiTopRight
+		styles.left = m.headerBorder.styleMultiTopLeft
+		styles.inner = m.headerBorder.styleMultiTop
+		styles.right = m.headerBorder.styleMultiTopRight
 	}
 
 	styles.inherit(m.headerStyle)

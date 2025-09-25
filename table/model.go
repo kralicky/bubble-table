@@ -55,6 +55,7 @@ type Model struct {
 	headerStyle    lipgloss.Style
 	rowStyleFunc   func(RowStyleFuncInput) lipgloss.Style
 	border         Border
+	headerBorder   Border
 	selectedText   string
 	unselectedText string
 
@@ -118,6 +119,7 @@ func New(columns []Column) *Model {
 		metadata:       make(map[string]any),
 		highlightStyle: defaultHighlightStyle.Copy(),
 		border:         borderDefault,
+		headerBorder:   borderDefault,
 		headerVisible:  true,
 		footerVisible:  true,
 		keyMap:         DefaultKeyMap(),

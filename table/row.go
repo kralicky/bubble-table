@@ -159,7 +159,12 @@ func (m *Model) renderRowData(row Row, rowStyle lipgloss.Style, last bool) strin
 
 	maxCellHeight := 1
 	if m.multiline {
-		for _, column := range m.columns {
+		for i, column := range m.columns {
+			if !m.border.Dividers && i != len(m.columns)-1 {
+				rowStyle = rowStyle.BorderRightBackground(rowStyle.GetBackground())
+			} else {
+				rowStyle = rowStyle.UnsetBorderRightBackground()
+			}
 			cellStr := m.renderRowColumnData(row, column, rowStyle, lipgloss.NewStyle())
 			maxCellHeight = max(maxCellHeight, lipgloss.Height(cellStr))
 		}
@@ -173,6 +178,11 @@ func (m *Model) renderRowData(row Row, rowStyle lipgloss.Style, last bool) strin
 			rowStyles = stylesInner
 		} else {
 			rowStyles = stylesLast
+		}
+		if !m.border.Dividers && columnIndex != len(m.columns)-1 {
+			rowStyle = rowStyle.BorderRightBackground(rowStyle.GetBackground())
+		} else {
+			rowStyle = rowStyle.UnsetBorderRightBackground()
 		}
 		rowStyle = rowStyle.Copy().Height(maxCellHeight)
 
